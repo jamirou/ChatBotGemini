@@ -25,12 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ChatPage(modifier: Modifier) {
+fun ChatPage(modifier: Modifier, viewModel: ChatViewModel) {
     Column(modifier = modifier) {
         AppHeader()
         MessageInput(
             onMessageSend = {
-
+                viewModel.sendMessage(it)
             }
         )
     }
