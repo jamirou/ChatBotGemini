@@ -28,7 +28,11 @@ import androidx.compose.ui.unit.sp
 fun ChatPage(modifier: Modifier) {
     Column(modifier = modifier) {
         AppHeader()
-        MessageInput()
+        MessageInput(
+            onMessageSend = {
+
+            }
+        )
     }
 }
 
@@ -49,17 +53,22 @@ fun AppHeader() {
 }
 
 @Composable
-fun MessageInput() {
+fun MessageInput(onMessageSend: (String) -> Unit) {
     var message by remember { mutableStateOf("") }
     Row(
         modifier = Modifier
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        OutlinedTextField(value = message,
+        OutlinedTextField(
+            modifier = Modifier.weight(1f),
+            value = message,
             onValueChange = { message = it }
         )
-        IconButton(onClick = {}) {
+        IconButton(onClick = {
+            onMessageSend(message)
+            message = ""
+        }) {
             Icon(
                 imageVector = Icons.Default.Send,
                 contentDescription = "Send Message",
@@ -68,7 +77,6 @@ fun MessageInput() {
         }
     }
 }
-
 
 
 
