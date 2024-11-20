@@ -1,12 +1,16 @@
 package com.devjamiro.geminichatbot
 
 import android.graphics.Paint.Align
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,12 +30,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devjamiro.geminichatbot.ui.theme.ModelMessage
+import com.devjamiro.geminichatbot.ui.theme.Purple40
 import com.devjamiro.geminichatbot.ui.theme.UserMessage
 
+@RequiresApi(35)
 @Composable
 fun ChatPage(modifier: Modifier, viewModel: ChatViewModel) {
     Column(modifier = modifier) {
@@ -47,12 +54,28 @@ fun ChatPage(modifier: Modifier, viewModel: ChatViewModel) {
 
 @Composable
 fun MessageList(modifier: Modifier = Modifier, messageList: List<MessageModel>) {
-    LazyColumn(
-        modifier = modifier,
-        reverseLayout = true
-    ) {
-        items(messageList.reversed()) {
-            MessageRow(messageModel = it)
+    if (messageList.isEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                modifier = Modifier.size(60.dp),
+                painter = painterResource(id = R.drawable.ic_android),
+                contentDescription = "Question answer icon",
+                tint = ModelMessage
+            )
+            Text("Preguuuuntame", fontSize = 22.sp)
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier,
+            reverseLayout = true
+        ) {
+            items(messageList.reversed()) {
+                MessageRow(messageModel = it)
+            }
         }
     }
 }
@@ -116,8 +139,10 @@ fun MessageInput(onMessageSend: (String) -> Unit) {
             onValueChange = { message = it }
         )
         IconButton(onClick = {
-            onMessageSend(message)
-            message = ""
+            if (message.isNotEmpty()) {
+                onMessageSend(message)
+                message = ""
+            }
         }) {
             Icon(
                 imageVector = Icons.Default.Send,
