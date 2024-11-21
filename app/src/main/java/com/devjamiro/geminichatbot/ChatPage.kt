@@ -1,6 +1,5 @@
 package com.devjamiro.geminichatbot
 
-import android.graphics.Paint.Align
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
@@ -35,19 +35,36 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devjamiro.geminichatbot.ui.theme.ModelMessage
-import com.devjamiro.geminichatbot.ui.theme.Purple40
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.border
+import com.devjamiro.geminichatbot.ui.theme.AndroidColor
+import com.devjamiro.geminichatbot.ui.theme.BorderColor
+import com.devjamiro.geminichatbot.ui.theme.DarkBackground
+import com.devjamiro.geminichatbot.ui.theme.TextColorModel
+import com.devjamiro.geminichatbot.ui.theme.TextColorUser
 import com.devjamiro.geminichatbot.ui.theme.UserMessage
-
-@RequiresApi(35)
 @Composable
 fun ChatPage(modifier: Modifier, viewModel: ChatViewModel) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(DarkBackground)  // Usar DarkBackground
+    ) {
         AppHeader()
-        MessageList(modifier = Modifier.weight(1f), messageList = viewModel.messageList)
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            MessageList(
+                modifier = Modifier.fillMaxSize(),
+                messageList = viewModel.messageList
+            )
+        }
         MessageInput(
-            onMessageSend = {
-                viewModel.sendMessage(it)
-            }
+            onMessageSend = { viewModel.sendMessage(it) }
         )
     }
 }
@@ -64,9 +81,9 @@ fun MessageList(modifier: Modifier = Modifier, messageList: List<MessageModel>) 
                 modifier = Modifier.size(60.dp),
                 painter = painterResource(id = R.drawable.ic_android),
                 contentDescription = "Question answer icon",
-                tint = ModelMessage
+                tint = AndroidColor
             )
-            Text("Preguuuuntame", fontSize = 22.sp)
+            Text("Preguuuuntame", fontSize = 22.sp, color = Color.White)
         }
     } else {
         LazyColumn(
@@ -83,27 +100,40 @@ fun MessageList(modifier: Modifier = Modifier, messageList: List<MessageModel>) 
 @Composable
 fun MessageRow(messageModel: MessageModel) {
     val isModel = messageModel.role == "model"
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
+    AnimatedVisibility(
+        visible = true,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
-                    .align(
-                        if (isModel) Alignment.BottomStart else Alignment.BottomEnd
-                    )
-                    .padding(
-                        start = if (isModel) 8.dp else 70.dp,
-                        end = if (isModel) 70.dp else 8.dp,
-                        top = 8.dp,
-                        bottom = 8.dp
-                    )
-                    .clip(RoundedCornerShape(48f))
-                    .background(if (isModel) ModelMessage else UserMessage)
-                    .padding(16.dp)
+                    .fillMaxWidth()
             ) {
-                Text(text = messageModel.message, fontWeight = FontWeight.W500, color = Color.Black)
+                Box(
+                    modifier = Modifier
+                        .align(
+                            if (isModel) Alignment.BottomStart else Alignment.BottomEnd
+                        )
+                        .padding(
+                            start = if (isModel) 8.dp else 70.dp,
+                            end = if (isModel) 70.dp else 8.dp,
+                            top = 8.dp,
+                            bottom = 8.dp
+                        )
+                        .clip(RoundedCornerShape(48f))
+                        .background(if (isModel) ModelMessage else UserMessage)
+                        .border(2.dp, BorderColor, RoundedCornerShape(48f))
+                        .padding(16.dp)
+                ) {
+                    SelectionContainer {
+                        Text(
+                            text = messageModel.message,
+                            fontWeight = FontWeight.W500,
+                            color = if (isModel) TextColorModel else TextColorUser
+                        )
+                    }
+                }
             }
         }
     }
@@ -118,7 +148,7 @@ fun AppHeader() {
     ) {
         Text(
             modifier = Modifier.padding(16.dp),
-            text = "Gemini ChatBot",
+            text = "Gemini ChatBot test 1",
             color = Color.White,
             fontSize = 22.sp
         )
@@ -136,7 +166,8 @@ fun MessageInput(onMessageSend: (String) -> Unit) {
         OutlinedTextField(
             modifier = Modifier.weight(1f),
             value = message,
-            onValueChange = { message = it }
+            onValueChange = { message = it },
+            textStyle = androidx.compose.ui.text.TextStyle(color = Color.White)
         )
         IconButton(onClick = {
             if (message.isNotEmpty()) {
@@ -152,11 +183,3 @@ fun MessageInput(onMessageSend: (String) -> Unit) {
         }
     }
 }
-
-
-
-
-
-
-
-
