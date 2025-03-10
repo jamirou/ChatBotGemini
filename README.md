@@ -32,7 +32,6 @@ https://github.com/user-attachments/assets/26a5198a-93e0-495a-a58e-a824cebfaff7
 ### Clonar el Repositorio
 ```bash
 git clone https://github.com/tu-usuario/gemini-chatbot.git
-cd gemini-chatbot
 ```
 
 ## Configurar la Clave API
@@ -46,17 +45,11 @@ Asegúrate de mantener la clave en privado. Puedes usar un sistema de variables 
 
 ## 🏗️ Arquitectura
 
-Estructura de Carpetas
-	•	MainActivity: Configuración principal y gestión del diseño.
-	•	ChatPage y componentes: Implementación de la interfaz de usuario, incluyendo:
-	•	MessageList
-	•	MessageRow
-	•	MessageInput
-	•	ChatViewModel: Manejo de lógica de negocio y comunicación con el modelo generativo.
-	•	MessageModel: Modelo de datos para representar los mensajes.
-
-## 🎨 Temas y Estilos
-
-La aplicación utiliza un esquema de colores predefinido:
-	•	Fondo oscuro: Mejora la experiencia en ambientes con poca luz.
-	•	Colores personalizados: Definidos en el archivo de temas (ui.theme).
+### Estructura
+* MainActivity: Configuración principal y gestión del diseño.
+* ChatPage y componentes: Implementación de la interfaz de usuario, incluyendo:
+* MessageList
+* MessageRow
+* MessageInput
+* ChatViewModel: Manejo de lógica de negocio y comunicación con el modelo generativo.
+* MessageModel: Modelo de datos para representar los mensajes.
